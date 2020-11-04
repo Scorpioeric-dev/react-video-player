@@ -2,7 +2,7 @@ import React from 'react';
 import StyledPlaylistItem from './styles/StyledPlaylistItem';
 
 const PlaylistItem = ({ video, active, played }) => (
-  <div>PlayListItem</div>
+  <StyledPlaylistItem>PlayListItem</StyledPlaylistItem>
   // <StyledPlaylistItem active={active} played={played}>
   //   <div className="wbn-player__video-nr">{video.num}</div>
   //   <div className="wbn-player__video-name">{video.title}</div>

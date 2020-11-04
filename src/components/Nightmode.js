@@ -1,7 +1,6 @@
 import React from "react";
+import StyledNightmode from "./styles/StyledNightmode";
 
-const Nightmode = props => (
- <div>Nightmode</div>
-);
+const Nightmode = (props) => <StyledNightmode>Nightmode</StyledNightmode>;
 
-export default Nightmode
+export default Nightmode;

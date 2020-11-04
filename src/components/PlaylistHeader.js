@@ -1,7 +1,8 @@
 import React from "react";
+import StyledPlaylistHeader from './styles/StyledPlaylistHeader'
 
 const PlaylistHeader = props => (
- <div>PlaylistHeader!!</div>
+ <StyledPlaylistHeader>PlaylistHeader!!</StyledPlaylistHeader>
 );
 
 export default PlaylistHeader

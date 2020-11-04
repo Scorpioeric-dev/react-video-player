@@ -1,14 +1,15 @@
-import React from 'react'
-import Video from '../Video'
-import Playlist from '../containers/Playlist'
+import React from "react";
+import Video from "../Video";
+import Playlist from "../containers/Playlist";
+import StyledReactPlayer from "../styles/StyledReactPlayer";
 
- const ReactPlayer = (props) => {
-    return (
-        <>
-        <Video/>
-        <Playlist/>
-        </>
-    )
-}
+const ReactPlayer = (props) => {
+  return (
+    <StyledReactPlayer>
+      <Video />
+      <Playlist />
+    </StyledReactPlayer>
+  );
+};
 
-export default ReactPlayer
+export default ReactPlayer;
