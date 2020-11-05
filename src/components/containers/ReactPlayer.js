@@ -23,7 +23,7 @@ const themeLight = {
   color: "#353535",
 };
 
-const ReactPlayer = (props) => {
+const ReactPlayer = ({ match, history, location }) => {
   const videos = JSON.parse(document.querySelector('[name="videos"]').value);
 
   const [state, setState] = useState({
@@ -33,7 +33,32 @@ const ReactPlayer = (props) => {
     playlistId: videos.playlistId,
     autoplay: false,
   });
-  
+
+  useEffect(() => {
+    const videoId = match.params.activeVideo;
+    if (videoId !== undefined) {
+      const newActiveVideo = state.videos.findIndex(
+        (video) => video.id === videoId
+      );
+      setState((prev) => ({
+        ...prev,
+        activeVideo: prev.videos[newActiveVideo],
+        autoplay: location.autoplay,
+      }));
+    } else {
+      history.push({
+        pathname: `/${state.activeVideo.id}`,
+        autoplay: false,
+      });
+    }
+  }, [
+    history,
+    location.autoplay,
+    match.params.activeVideo,
+    state.activeVideo.id,
+    state.videos,
+  ]);
+
   const nightModeCallback = () => {};
   const endCallback = () => {};
   const progressCallback = () => {};
@@ -42,17 +67,17 @@ const ReactPlayer = (props) => {
     <ThemeProvider theme={state.nightMode ? theme : themeLight}>
       {state.videos !== null ? (
         <StyledReactPlayer>
-          <Video
-            active={state.activeVideo}
-            autoplay={state.autoplay}
-            endCallback={endCallback}
-            progressCallback={progressCallback}
-          />
           <Playlist
             videos={state.videos}
             active={state.activeVideo}
             nightModeCallback={nightModeCallback}
             nightMode={state.nightMode}
+          />
+          <Video
+            active={state.activeVideo}
+            autoplay={state.autoplay}
+            endCallback={endCallback}
+            progressCallback={progressCallback}
           />
         </StyledReactPlayer>
       ) : null}
