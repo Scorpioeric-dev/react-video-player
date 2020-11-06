@@ -23,16 +23,21 @@ const themeLight = {
   color: "#353535",
 };
 
-const ReactPlayer = ({ match, history, location }) => {
+const ReactPlayer = ({ props, match, history, location }) => {
   const videos = JSON.parse(document.querySelector('[name="videos"]').value);
+  const savedState = JSON.parse(localStorage.getItem(`${videos.playlistId}`));
 
   const [state, setState] = useState({
-    videos: videos.playlist,
-    activeVideo: videos.playlist[0],
-    nightMode: true,
-    playlistId: videos.playlistId,
+    videos: savedState ? savedState.videos : videos.playlist,
+    activeVideo: savedState ? savedState.activeVideo : videos.playlist[0],
+    nightMode: savedState ? savedState.nightMode : true,
+    playlistId: savedState ? savedState.playlistId : videos.playlistId,
     autoplay: false,
   });
+
+  useEffect(() => {
+    localStorage.setItem(`${state.playlistId}`, JSON.stringify({ ...state }));
+  }, [state]);
 
   useEffect(() => {
     const videoId = match.params.activeVideo;
@@ -59,9 +64,34 @@ const ReactPlayer = ({ match, history, location }) => {
     state.videos,
   ]);
 
-  const nightModeCallback = () => {};
-  const endCallback = () => {};
-  const progressCallback = () => {};
+  const nightModeCallback = () => {
+    setState({ ...state, nightMode: !state.nightMode });
+  };
+  const endCallback = () => {
+    const videoId = props.match.params.activeVideo;
+    const currentVideoIndex = state.videos.findIndex(
+      (video) => video.id === videoId
+    );
+    const nextVideo =
+      currentVideoIndex === state.videos.length - 1 ? 0 : currentVideoIndex + 1;
+    props.history.push({
+      pathname: `${state.videos[nextVideo].id}`,
+      autoplay: false,
+    });
+  };
+
+  const progressCallback = (e) => {
+    if (e.playedSeconds > 10 && e.playedSeconds < 11) {
+      setState({
+        ...state,
+        videos: state.videos.map((element) => {
+          return element.id === state.activeVideo.id
+            ? { ...element, played: true }
+            : element;
+        }),
+      });
+    }
+  };
 
   return (
     <ThemeProvider theme={state.nightMode ? theme : themeLight}>
